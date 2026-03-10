@@ -17,14 +17,13 @@
 #SBATCH --mem=2G
 #SBATCH --gres=gpu:1
 
-# Job array: one task per file in wan_pairs/
-# The range must match the number of files; adjust upper bound as needed
-#SBATCH --array=0-8%10   # Replace N with (number of files - 1)
+# Job array: one task per author file in wan_pairs_authors/ (8 files -> 0-7)
+#SBATCH --array=0-7
 
 # Change to project directory so relative paths work
 cd /home/dmitry/Projects/DISKAH/Gabriel/WAN
 
-# Build an array of all wan_pairs txt files
+# Build an array of all wan_pairs_authors txt files
 WAN_PAIRS_FILES=(wan_pairs_authors/*.txt)
 
 # Pick the file for this array task
@@ -36,8 +35,6 @@ if [ -z "$INPUT_FILE" ]; then
 fi
 
 echo "Task $SLURM_ARRAY_TASK_ID processing: $INPUT_FILE"
-
-mkdir -p results
 
 time python ./compareWANSnoprint.py "$INPUT_FILE" > "results/$(basename $INPUT_FILE .txt).csv"
 
