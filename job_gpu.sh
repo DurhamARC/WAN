@@ -21,7 +21,7 @@
 #SBATCH --array=0-7
 
 # Change to project directory so relative paths work
-cd /home/dmitry/Projects/DISKAH/Gabriel/WAN
+#cd /home/dmitry/Projects/DISKAH/Gabriel/WAN
 
 # Build an array of all wan_pairs_authors txt files
 WAN_PAIRS_FILES=(wan_pairs_authors/*.txt)
@@ -35,6 +35,11 @@ if [ -z "$INPUT_FILE" ]; then
 fi
 
 echo "Task $SLURM_ARRAY_TASK_ID processing: $INPUT_FILE"
+
+# Activate Conda environment
+export CONDADIR=/nobackup/projects/bddur01/$USER
+source $CONDADIR/miniconda/etc/profile.d/conda.sh
+conda activate cupy-env
 
 time python ./compareWANSnoprint.py "$INPUT_FILE" > "results/$(basename $INPUT_FILE .txt).csv"
 
